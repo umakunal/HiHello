@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/Assets/Fonts/Cadet-Black.ttf",
+      "sha1": "390fc05c9a472a10dcaf898c2647fd606e6c7ede"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-Bold.ttf",
+      "sha1": "34cc98ac490b1cab6952db827023ff13e72b3840"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-Light.ttf",
+      "sha1": "1040bb005ecdd4e67f2ca0d1acd18912f0927a84"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-Medium.ttf",
+      "sha1": "9faee8623c7e164ec58b385a373367ac7c7637ad"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-Regular.ttf",
+      "sha1": "b1cbb2ab6fbcc37fee62beeac9bb8a6d6bc62d7e"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-SemiBold.ttf",
+      "sha1": "222fb223cdb366087e363dcab7f4d065f7138a8b"
+    },
+    {
+      "path": "src/Assets/Fonts/Cadet-Thin.ttf",
+      "sha1": "62727160a7ee0a49711b88c8817b81ee31bad9a4"
+    }
+  ]
+}
