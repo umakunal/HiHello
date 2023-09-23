@@ -7,12 +7,13 @@ export const getFirebaseApp = () => {
 
   // Your web app's Firebase configuration
   const firebaseConfig = {
-    apiKey: 'AIzaSyBmr87E2RzvhNAG7JLPb_5Km4WEmVA7gY0',
-    authDomain: 'hihello-a8e23.firebaseapp.com',
-    projectId: 'hihello-a8e23',
-    storageBucket: 'hihello-a8e23.appspot.com',
-    messagingSenderId: '1000605987736',
-    appId: '1:1000605987736:web:afddda04743b6aee8f71ed',
+    apiKey: 'AIzaSyBAS0sCLjUro5UDos1QwNJ2-U0Ho940B54',
+    authDomain: 'hihello-34dd2.firebaseapp.com',
+    databaseURL: 'https://hihello-34dd2-default-rtdb.firebaseio.com',
+    projectId: 'hihello-34dd2',
+    storageBucket: 'hihello-34dd2.appspot.com',
+    messagingSenderId: '243879408423',
+    appId: '1:243879408423:web:d21b106c90d1ac5719ef02',
   };
 
   // Initialize Firebase

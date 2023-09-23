@@ -1,6 +1,5 @@
 export const formReducer = (state, action) => {
   const {inputId, validationResult, inputValue} = action;
-  console.log('validation Result', validationResult);
   const updatedInputValues = {
     ...state.inputValues,
     [inputId]: inputValue,
