@@ -21,7 +21,7 @@ import {ImagePath} from '../../Theme/ImagePath';
 
 // create a component
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <PageContainer>

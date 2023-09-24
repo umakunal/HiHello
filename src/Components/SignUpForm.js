@@ -11,6 +11,7 @@ import {formReducer} from '../Utils/Reducer/FormReducer';
 import {signUp} from '../Utils/Actions/AuthAction';
 import {getFirebaseApp} from '../Utils/FirebaseHelper';
 import {COLORS} from '../Theme/Color';
+import {useDispatch, useSelector} from 'react-redux';
 
 const initialState = {
   inputValues: {
@@ -28,6 +29,9 @@ const initialState = {
   formIsValid: false,
 };
 const SignUpForm = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
+  // console.log('auth Data', auth);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formState, dispatchFormState] = useReducer(formReducer, initialState);
@@ -50,12 +54,13 @@ const SignUpForm = () => {
   const authHandler = async () => {
     try {
       setIsLoading(true);
-      await signUp(
+      const action = signUp(
         formState.inputValues.firstName,
         formState.inputValues.lastName,
         formState.inputValues.email,
         formState.inputValues.password,
       );
+      await dispatch(action);
       setError(null);
     } catch (error) {
       setError(error.message);
