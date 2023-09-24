@@ -12,7 +12,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // create a component
 const Input = props => {
-  const [Value, setValue] = useState(props.initialValue);
+  const [Value, setValue] = useState(props.value);
   const onChangeText = text => {
     setValue(text);
     props.onInputChanged && props.onInputChanged(props.id, text);

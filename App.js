@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native']);
-  // AsyncStorage.clear();
+  AsyncStorage.clear();
   return (
     <Provider store={store}>
       <MainRoutes />

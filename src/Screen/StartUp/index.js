@@ -14,8 +14,6 @@ const StartUp = () => {
   useEffect(() => {
     const tryLogin = async () => {
       const storedAuthInfo = await AsyncStorage.getItem('userData');
-      console.log('storedAuthInfo', storedAuthInfo);
-      console.log('I am here');
       if (!storedAuthInfo) {
         dispatch(setDidTryAutoLogin());
         return;
@@ -24,7 +22,6 @@ const StartUp = () => {
       console.log('parseData', parseData);
       const {token, userId, expiryDate: expiryDateString} = parseData;
       const expiryDate = new Date(expiryDateString);
-      console.log('expiryDate', expiryDate);
       if (expiryDate <= new Date() || !token || !userId) {
         dispatch(setDidTryAutoLogin());
         return;

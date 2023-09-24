@@ -51,7 +51,7 @@ const SignUpForm = () => {
       Alert.alert('An error occurred', error, [{text: 'Okay'}]);
     }
   }, [error]);
-  const authHandler = async () => {
+  const authHandler = useCallback(async () => {
     try {
       setIsLoading(true);
       const action = signUp(
@@ -60,13 +60,13 @@ const SignUpForm = () => {
         formState.inputValues.email,
         formState.inputValues.password,
       );
-      await dispatch(action);
       setError(null);
+      await dispatch(action);
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
     }
-  };
+  }, [dispatch, formState]);
   return (
     <View>
       <Input
