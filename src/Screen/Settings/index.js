@@ -1,6 +1,12 @@
 //import liraries
 import React, {useCallback, useReducer, useState} from 'react';
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import PageTitle from '../../Components/PageTitle';
 import PageContainer from '../../Components/PageContainer';
 import Input from '../../Components/Input';
@@ -10,13 +16,14 @@ import {validateInput} from '../../Utils/Actions/FormActions';
 import {useDispatch, useSelector} from 'react-redux';
 import {formReducer} from '../../Utils/Reducer/FormReducer';
 import SubmitButton from '../../Components/SubmitButton';
-import {verticalScale} from '../../Theme/Dimentions';
+import {moderateScale, verticalScale} from '../../Theme/Dimentions';
 import {COLORS} from '../../Theme/Color';
 import {
   updateSignedInUserData,
   userLogout,
 } from '../../Utils/Actions/AuthAction';
 import {updateLoggedInUserData} from '../../Redux/authSlice';
+import ProfileImage from '../../Components/ProfileImage';
 
 // create a component
 
@@ -85,79 +92,84 @@ const Settings = () => {
   };
   return (
     <PageContainer>
-      <PageTitle>Settings</PageTitle>
-      <Input
-        id="firstName"
-        label="First name"
-        icon={'user-o'}
-        iconPack={FontAwesome}
-        // autoCapitalize="none"
-        value={userData?.firstName}
-        onInputChanged={inputChangedHandler}
-        errorText={formState.inputValidities['firstName']}
-      />
-      <Input
-        id="lastName"
-        label="Last name"
-        icon={'user-o'}
-        iconPack={FontAwesome}
-        // autoCapitalize="none"
-        value={userData?.lastName}
-        onInputChanged={inputChangedHandler}
-        errorText={formState.inputValidities['lastName']}
-      />
-      <Input
-        id="email"
-        label="Email"
-        icon={'mail'}
-        iconPack={Feather}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={userData?.email}
-        onInputChanged={inputChangedHandler}
-        errorText={formState.inputValidities['email']}
-      />
-      <Input
-        id="about"
-        label="About"
-        icon={'info'}
-        iconPack={Feather}
-        // autoCapitalize="none"
-        value={userData?.about}
-        onInputChanged={inputChangedHandler}
-        errorText={formState.inputValidities['about']}
-      />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.formContainer}>
+        <PageTitle>Settings</PageTitle>
+        <ProfileImage size={moderateScale(80)} />
+        <Input
+          id="firstName"
+          label="First name"
+          icon={'user-o'}
+          iconPack={FontAwesome}
+          // autoCapitalize="none"
+          value={userData?.firstName}
+          onInputChanged={inputChangedHandler}
+          errorText={formState.inputValidities['firstName']}
+        />
+        <Input
+          id="lastName"
+          label="Last name"
+          icon={'user-o'}
+          iconPack={FontAwesome}
+          // autoCapitalize="none"
+          value={userData?.lastName}
+          onInputChanged={inputChangedHandler}
+          errorText={formState.inputValidities['lastName']}
+        />
+        <Input
+          id="email"
+          label="Email"
+          icon={'mail'}
+          iconPack={Feather}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={userData?.email}
+          onInputChanged={inputChangedHandler}
+          errorText={formState.inputValidities['email']}
+        />
+        <Input
+          id="about"
+          label="About"
+          icon={'info'}
+          iconPack={Feather}
+          // autoCapitalize="none"
+          value={userData?.about}
+          onInputChanged={inputChangedHandler}
+          errorText={formState.inputValidities['about']}
+        />
 
-      <View style={{marginTop: verticalScale(20)}}>
-        {showSuccessMessage && <Text>Saved!!!</Text>}
+        <View style={{marginTop: verticalScale(20)}}>
+          {showSuccessMessage && <Text>Saved!!!</Text>}
 
-        {isLoading ? (
-          <ActivityIndicator
-            size={'small'}
-            color={COLORS.primary}
-            style={{marginTop: verticalScale(10)}}
-          />
-        ) : (
-          hasChanges() && (
-            <SubmitButton
-              disabled={!formState?.formIsValid}
-              style={{marginTop: verticalScale(20)}}
-              title="Save"
-              onPress={() => {
-                saveHandler();
-              }}
+          {isLoading ? (
+            <ActivityIndicator
+              size={'small'}
+              color={COLORS.primary}
+              style={{marginTop: verticalScale(10)}}
             />
-          )
-        )}
-      </View>
-      <SubmitButton
-        color={COLORS.red2}
-        style={{marginTop: verticalScale(20)}}
-        title="Logout"
-        onPress={() => {
-          dispatch(userLogout());
-        }}
-      />
+          ) : (
+            hasChanges() && (
+              <SubmitButton
+                disabled={!formState?.formIsValid}
+                style={{marginTop: verticalScale(20)}}
+                title="Save"
+                onPress={() => {
+                  saveHandler();
+                }}
+              />
+            )
+          )}
+        </View>
+        <SubmitButton
+          color={COLORS.red2}
+          style={{marginTop: verticalScale(20)}}
+          title="Logout"
+          onPress={() => {
+            dispatch(userLogout());
+          }}
+        />
+      </ScrollView>
     </PageContainer>
   );
 };
@@ -166,6 +178,9 @@ const Settings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  formContainer: {
+    alignItems: 'center',
   },
 });
 
