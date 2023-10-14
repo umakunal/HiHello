@@ -109,3 +109,13 @@ export const userLogout = () => {
     dispatch(logout());
   };
 };
+
+export const updateSignedInUserData = async (userId, newData) => {
+  if (newData.firstName && newData.lastName) {
+    const firstLast = `${newData.firstName} ${newData.lastName}`.toLowerCase();
+    newData.firstLast = firstLast;
+  }
+  const dbRef = ref(getDatabase());
+  const childRef = child(dbRef, `users/${userId}`);
+  await update(childRef, newData);
+};

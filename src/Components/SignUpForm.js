@@ -5,11 +5,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Input from './Input';
 import SubmitButton from './SubmitButton';
 import {verticalScale} from '../Theme/Dimentions';
-import {validate} from 'validate.js';
 import {validateInput} from '../Utils/Actions/FormActions';
 import {formReducer} from '../Utils/Reducer/FormReducer';
 import {signUp} from '../Utils/Actions/AuthAction';
-import {getFirebaseApp} from '../Utils/FirebaseHelper';
 import {COLORS} from '../Theme/Color';
 import {useDispatch, useSelector} from 'react-redux';
 
