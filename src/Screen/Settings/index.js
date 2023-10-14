@@ -96,7 +96,11 @@ const Settings = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.formContainer}>
         <PageTitle>Settings</PageTitle>
-        <ProfileImage size={moderateScale(80)} />
+        <ProfileImage
+          size={moderateScale(80)}
+          uri={userData?.profilePicture}
+          userId={userData?.userId}
+        />
         <Input
           id="firstName"
           label="First name"
