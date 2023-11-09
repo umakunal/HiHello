@@ -100,6 +100,7 @@ const Settings = () => {
           size={moderateScale(80)}
           uri={userData?.profilePicture}
           userId={userData?.userId}
+          showEditButton={true}
         />
         <Input
           id="firstName"
