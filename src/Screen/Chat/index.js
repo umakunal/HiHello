@@ -1,5 +1,5 @@
 //import liraries
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   Text,
@@ -19,13 +19,48 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import {COLORS} from '../../Theme/Color';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import Bubble from '../../Components/Bubble';
+import PageContainer from '../../Components/PageContainer';
+import {createChat} from '../../Utils/Actions/ChatAction';
 
 // create a component
-const Chat = () => {
+const Chat = props => {
+  console.log('props?.route.params?.chatId', props?.route.params.chatId);
+  const navigation = useNavigation();
+  const storedUsers = useSelector(state => state.users.storedUsers);
+  const userData = useSelector(state => state.auth?.userData);
+  const [chatUsers, setChatUsers] = useState([]);
   const [messageText, setMessageText] = useState('');
-  const sendMessage = useCallback(() => {
+  const [chatId, setChatId] = useState(props?.route.params?.chatId);
+  const chatData = props?.route?.params?.newChatData;
+  const getChatTitleFromName = () => {
+    const otherUserId = chatUsers.find(uid => uid !== userData?.uid);
+    const otherUser = storedUsers[otherUserId];
+    return otherUser && `${otherUser?.firstName} ${otherUser?.lastName}`;
+  };
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: getChatTitleFromName(),
+    });
+    setChatUsers(chatData?.users);
+  }, [chatUsers]);
+  const sendMessage = useCallback(async () => {
+    try {
+      let id = chatId;
+      if (!id) {
+        //No Chat Id. Create new chat
+        id = await createChat(
+          userData.userId,
+          props?.route.params?.newChatData,
+        );
+        setChatId(id);
+      }
+    } catch (error) {}
     setMessageText('');
-  }, [messageText]);
+  }, [messageText, chatId]);
+
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
       <KeyboardAvoidingView
@@ -34,7 +69,13 @@ const Chat = () => {
         keyboardVerticalOffset={100}>
         <ImageBackground
           source={ImagePath.background}
-          style={styles.backgroundImage}></ImageBackground>
+          style={styles.backgroundImage}>
+          <PageContainer style={{backgroundColor: 'transparent'}}>
+            {!chatId && (
+              <Bubble message={'This is a new chat.'} type="system" />
+            )}
+          </PageContainer>
+        </ImageBackground>
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => {}}>
             <Feather name="plus" size={24} color={COLORS.primary} />

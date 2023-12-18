@@ -19,9 +19,11 @@ import ProfileImage from './ProfileImage';
 // create a component
 const imageSize = 40;
 const DataItem = props => {
-  const {title, subTitle, image, onPress, type, isChecked, icon} = props;
+  const {title, subTitle, image, onPress, type, isChecked, icon, dataKey} =
+    props;
   return (
     <TouchableWithoutFeedback
+      key={dataKey}
       onPress={() => {
         onPress();
       }}>

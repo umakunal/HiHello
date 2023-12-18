@@ -7,10 +7,13 @@ import {useNavigation} from '@react-navigation/native';
 import {ScreenName} from '../../Constants/ScreenName';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../Components/CustomHeaderButton';
+import {useSelector} from 'react-redux';
 
 // create a component
-const ChatList = () => {
+const ChatList = props => {
   const navigation = useNavigation();
+  const userData = useSelector(state => state.auth?.userData);
+  const selectedUser = props?.route?.params?.selectedUserId;
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -26,6 +29,14 @@ const ChatList = () => {
       ),
     });
   }, []);
+  useEffect(() => {
+    if (!selectedUser) {
+      return;
+    }
+    const chatUsers = [selectedUser, userData.userId];
+    const navigationProps = {newChatData: {users: chatUsers}};
+    navigation.navigate(ScreenName.chat, navigationProps);
+  }, [props?.route?.params]);
   return (
     <View style={styles.container}>
       <Text>ChatList</Text>

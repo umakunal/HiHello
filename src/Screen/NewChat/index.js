@@ -25,7 +25,8 @@ import {
 import CommonStyle from '../../Constants/CommonStyle';
 import {searchUser} from '../../Utils/Actions/UserAction';
 import DataItem from '../../Components/DataItem';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setStoredUsers} from '../../Redux/userSlice';
 
 // create a component
 const NewChat = props => {
@@ -35,6 +36,7 @@ const NewChat = props => {
   const [SearchTerm, setSearchTerm] = useState('');
   const [NoResultFound, setNoResultFound] = useState(false);
   const userData = useSelector(state => state.auth?.userData);
+  const dispatch = useDispatch();
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -68,6 +70,7 @@ const NewChat = props => {
         setNoResultFound(true);
       } else {
         setNoResultFound(false);
+        dispatch(setStoredUsers({newUsers: userResult}));
       }
       setLoading(false);
     }, 500);
@@ -111,6 +114,7 @@ const NewChat = props => {
                 subTitle={userData.about}
                 image={userData.profilePicture}
                 onPress={() => userPressed(userId)}
+                dataKey={userId}
               />
             );
           }}
