@@ -1,6 +1,6 @@
 //import liraries
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {COLORS} from '../../Theme/Color';
 import {Fonts} from '../../Theme/Fonts';
 import {useNavigation} from '@react-navigation/native';
@@ -8,12 +8,23 @@ import {ScreenName} from '../../Constants/ScreenName';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../Components/CustomHeaderButton';
 import {useSelector} from 'react-redux';
+import DataItem from '../../Components/DataItem';
+import PageContainer from '../../Components/PageContainer';
+import PageTitle from '../../Components/PageTitle';
 
 // create a component
 const ChatList = props => {
   const navigation = useNavigation();
-  const userData = useSelector(state => state.auth?.userData);
   const selectedUser = props?.route?.params?.selectedUserId;
+  const userData = useSelector(state => state.auth?.userData);
+  const storedUser = useSelector(state => state.users.storedUsers);
+  const userChats = useSelector(state => {
+    const chatsData = state.chats?.chatsData;
+    return Object.values(chatsData).sort((a, b) => {
+      return new Date(b?.updatedAt) - new Date(a?.updatedAt);
+    });
+  });
+  console.log('storedUsers+++++>', storedUser);
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -38,16 +49,32 @@ const ChatList = props => {
     navigation.navigate(ScreenName.chat, navigationProps);
   }, [props?.route?.params]);
   return (
-    <View style={styles.container}>
-      <Text>ChatList</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          navigation.navigate(ScreenName.chat);
-        }}>
-        <Text style={styles.btnText}>Go to Chat </Text>
-      </TouchableOpacity>
-    </View>
+    <PageContainer>
+      <PageTitle title="Chats" />
+      <FlatList
+        data={userChats}
+        renderItem={itemData => {
+          const chatData = itemData?.item;
+          const chatId = chatData?.key;
+          const otherUserId = chatData?.users?.find(
+            userId => userId !== userData.userId,
+          );
+          const otherUser = storedUser[otherUserId];
+          if (!otherUser) return;
+          const title = otherUser?.firstName + ' ' + otherUser?.lastName;
+          const subTitle = 'This will be message...';
+          const image = otherUser?.profilePicture;
+          return (
+            <DataItem
+              title={title}
+              subTitle={subTitle}
+              image={image}
+              onPress={() => navigation.navigate(ScreenName.chat, {chatId})}
+            />
+          );
+        }}
+      />
+    </PageContainer>
   );
 };
 

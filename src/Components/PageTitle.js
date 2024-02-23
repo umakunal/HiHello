@@ -9,7 +9,7 @@ import {Fonts} from '../Theme/Fonts';
 const PageTitle = props => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{props.children}</Text>
+      <Text style={styles.title}>{props.title}</Text>
     </View>
   );
 };
