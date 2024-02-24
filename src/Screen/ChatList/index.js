@@ -24,7 +24,7 @@ const ChatList = props => {
       return new Date(b?.updatedAt) - new Date(a?.updatedAt);
     });
   });
-  console.log('storedUsers+++++>', storedUser);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -62,7 +62,7 @@ const ChatList = props => {
           const otherUser = storedUser[otherUserId];
           if (!otherUser) return;
           const title = otherUser?.firstName + ' ' + otherUser?.lastName;
-          const subTitle = 'This will be message...';
+          const subTitle = chatData?.latestMessage || 'New Chat';
           const image = otherUser?.profilePicture;
           return (
             <DataItem

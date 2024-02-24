@@ -23,7 +23,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Bubble from '../../Components/Bubble';
 import PageContainer from '../../Components/PageContainer';
-import {createChat} from '../../Utils/Actions/ChatAction';
+import {createChat, sendTextMessage} from '../../Utils/Actions/ChatAction';
 
 // create a component
 const Chat = props => {
@@ -31,6 +31,8 @@ const Chat = props => {
   const navigation = useNavigation();
   const storedUsers = useSelector(state => state.users.storedUsers);
   const storedChats = useSelector(state => state.chats.chatsData);
+  const ChatMessages = useSelector(state => state.messages.messagesData);
+  console.log('ChatMessages==>', ChatMessages);
   const userData = useSelector(state => state.auth?.userData);
   const [chatUsers, setChatUsers] = useState([]);
   const [messageText, setMessageText] = useState('');
@@ -59,7 +61,11 @@ const Chat = props => {
         );
         setChatId(id);
       }
-    } catch (error) {}
+      //Send message
+      await sendTextMessage(id, userData.userId, messageText);
+    } catch (error) {
+      console.log('error ocurred while sending message', error);
+    }
     setMessageText('');
   }, [messageText, chatId]);
 

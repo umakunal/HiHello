@@ -104,7 +104,7 @@ const NewChat = props => {
       {!Loading && !NoResultFound && Users && (
         <FlatList
           data={Object.keys(Users)}
-          keyExtractor={item => item.id}
+          keyExtractor={items => items}
           renderItem={itemData => {
             const userId = itemData.item;
             const userData = Users[userId];

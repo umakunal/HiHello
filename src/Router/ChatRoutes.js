@@ -11,6 +11,7 @@ import {ActivityIndicator, View} from 'react-native';
 import {COLORS} from '../Theme/Color';
 import CommonStyle from '../Constants/CommonStyle';
 import {setStoredUsers} from '../Redux/userSlice';
+import {setChatMessages} from '../Redux/messagesSlice';
 
 const ChatRoutes = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,13 @@ const ChatRoutes = () => {
             dispatch(setChatsData({chatsData}));
             setIsLoading(false);
           }
+        });
+
+        const messagesRef = child(dbRef, `messages/${chatId}`);
+        refs.push(messagesRef);
+        onValue(messagesRef, messageSnapshot => {
+          const messagesData = messageSnapshot.val();
+          dispatch(setChatMessages({chatId, messagesData}));
         });
 
         if (chatsFoundCount == 0) {
