@@ -39,7 +39,6 @@ const ChatRoutes = () => {
           chatsFoundCount++;
           const data = chatSnapshot.val();
           if (data) {
-            console.log('Data FOUND===>', data);
             data.key = chatSnapshot.key;
             data?.users.forEach(userId => {
               if (storedUser[userId]) return;
