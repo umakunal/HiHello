@@ -1,16 +1,41 @@
 //import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {Component, useRef} from 'react';
+import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {COLORS} from '../Theme/Color';
 import {Fonts} from '../Theme/Fonts';
 import {moderateScale, verticalScale} from '../Theme/Dimentions';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import uuid from 'react-native-uuid';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // create a component
+
+const MenuItem = props => {
+  const Icon = props.iconPack ?? Feather;
+  return (
+    <MenuOption onSelect={props.onSelect}>
+      <View style={styles.menuItemContainer}>
+        <Text style={styles.menuItemText}>{props.text}</Text>
+        <Icon name={props.icon} size={15} color={COLORS.primary} />
+      </View>
+    </MenuOption>
+  );
+};
 const Bubble = props => {
   const {message, type} = props;
   const bubbleStyles = {...styles.container};
   const textStyles = {...styles.textStyle};
   const wrapperStyle = {...styles.wrapperStyle};
+  let Container = View;
+  const menuRef = useRef(null);
+  const id = useRef(uuid.v4());
 
   switch (type) {
     case 'system':
@@ -30,20 +55,61 @@ const Bubble = props => {
       wrapperStyle.justifyContent = 'flex-end';
       bubbleStyles.backgroundColor = COLORS.primaryLight;
       bubbleStyles.maxWidth = '90%';
+      Container = TouchableWithoutFeedback;
       break;
     case 'other':
       wrapperStyle.justifyContent = 'flex-start';
       bubbleStyles.maxWidth = '90%';
+      Container = TouchableWithoutFeedback;
+      bubbleStyles.backgroundColor = '#e6e6e6';
       break;
 
     default:
       break;
   }
+
+  const copyToClipboard = message => {
+    Clipboard.setString(message);
+  };
   return (
     <View style={wrapperStyle}>
-      <View style={bubbleStyles}>
-        <Text style={textStyles}>{message}</Text>
-      </View>
+      <Container
+        style={{width: '100%'}}
+        onLongPress={() => {
+          menuRef.current.props.ctx.menuActions.openMenu(id.current);
+        }}>
+        <View style={bubbleStyles}>
+          <Text style={textStyles}>{message}</Text>
+          <Menu name={id.current} ref={menuRef}>
+            <MenuTrigger />
+            <MenuOptions>
+              <MenuItem
+                text="Copy"
+                onSelect={() => {
+                  copyToClipboard(message);
+                }}
+                icon="copy"
+              />
+              <MenuItem
+                icon={'star-o'}
+                iconPack={FontAwesome}
+                text="Star message"
+                onSelect={() => console.log('Start MEssage')}
+              />
+              <MenuItem
+                text="Delete"
+                onSelect={() => console.log('Delete')}
+                icon="trash"
+              />
+              <MenuItem
+                text="Edit"
+                onSelect={() => console.log('Edit')}
+                icon="edit"
+              />
+            </MenuOptions>
+          </Menu>
+        </View>
+      </Container>
     </View>
   );
 };
@@ -66,8 +132,18 @@ const styles = StyleSheet.create({
   textStyle: {
     color: COLORS.textColor,
     fontFamily: Fonts.regular,
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(14),
     letterSpacing: 0.3,
+  },
+  menuItemContainer: {
+    flexDirection: 'row',
+    padding: moderateScale(5),
+  },
+  menuItemText: {
+    flex: 1,
+    fontFamily: Fonts.regular,
+    letterSpacing: 0.3,
+    fontSize: moderateScale(12),
   },
 });
 

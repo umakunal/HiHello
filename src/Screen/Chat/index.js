@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: verticalScale(8),
     paddingHorizontal: horizontalScale(10),
-    height: moderateScale(50),
+    height: moderateScale(58),
     alignItems: 'center',
   },
   textBox: {
