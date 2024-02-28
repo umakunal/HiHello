@@ -14,6 +14,9 @@ import uuid from 'react-native-uuid';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {starMessage} from '../Utils/Actions/ChatAction';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 // create a component
 
@@ -29,11 +32,17 @@ const MenuItem = props => {
   );
 };
 const Bubble = props => {
-  const {message, type} = props;
+  const {message, type, messageId, userId, chatId, date} = props;
+  const starredMessages = useSelector(
+    state => state.messages.starredMessages[chatId] ?? {},
+  );
+  console.log('starredMessages==>', starredMessages);
   const bubbleStyles = {...styles.container};
   const textStyles = {...styles.textStyle};
   const wrapperStyle = {...styles.wrapperStyle};
   let Container = View;
+  let isUserMessage = false;
+  const dateString = moment(date).format('LT');
   const menuRef = useRef(null);
   const id = useRef(uuid.v4());
 
@@ -56,12 +65,14 @@ const Bubble = props => {
       bubbleStyles.backgroundColor = COLORS.primaryLight;
       bubbleStyles.maxWidth = '90%';
       Container = TouchableWithoutFeedback;
+      isUserMessage = true;
       break;
     case 'other':
       wrapperStyle.justifyContent = 'flex-start';
       bubbleStyles.maxWidth = '90%';
       Container = TouchableWithoutFeedback;
       bubbleStyles.backgroundColor = '#e6e6e6';
+      isUserMessage = true;
       break;
 
     default:
@@ -71,6 +82,8 @@ const Bubble = props => {
   const copyToClipboard = message => {
     Clipboard.setString(message);
   };
+
+  const isStarred = isUserMessage && starredMessages[messageId] !== undefined;
   return (
     <View style={wrapperStyle}>
       <Container
@@ -80,6 +93,12 @@ const Bubble = props => {
         }}>
         <View style={bubbleStyles}>
           <Text style={textStyles}>{message}</Text>
+          {
+            <View style={styles.timeContainer}>
+              {isStarred && <FontAwesome name="star" color={COLORS.primary} />}
+              <Text style={styles.timeText}>{dateString}</Text>
+            </View>
+          }
           <Menu name={id.current} ref={menuRef}>
             <MenuTrigger />
             <MenuOptions>
@@ -91,10 +110,10 @@ const Bubble = props => {
                 icon="copy"
               />
               <MenuItem
-                icon={'star-o'}
+                icon={isStarred ? 'star-o' : 'star'}
                 iconPack={FontAwesome}
-                text="Star message"
-                onSelect={() => console.log('Start MEssage')}
+                text={`${isStarred ? 'Unstar' : 'Star'} Message`}
+                onSelect={() => starMessage(messageId, chatId, userId)}
               />
               <MenuItem
                 text="Delete"
@@ -144,6 +163,17 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.regular,
     letterSpacing: 0.3,
     fontSize: moderateScale(12),
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  timeText: {
+    fontFamily: Fonts.regular,
+    letterSpacing: 0.3,
+    fontSize: moderateScale(10),
+    marginLeft: moderateScale(5),
+    color: COLORS.grey,
   },
 });
 

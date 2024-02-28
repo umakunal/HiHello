@@ -11,7 +11,7 @@ import {ActivityIndicator, View} from 'react-native';
 import {COLORS} from '../Theme/Color';
 import CommonStyle from '../Constants/CommonStyle';
 import {setStoredUsers} from '../Redux/userSlice';
-import {setChatMessages} from '../Redux/messagesSlice';
+import {setChatMessages, setStarredMessages} from '../Redux/messagesSlice';
 
 const ChatRoutes = () => {
   const dispatch = useDispatch();
@@ -68,6 +68,16 @@ const ChatRoutes = () => {
           setIsLoading(false);
         }
       }
+    });
+
+    const starredMessagesRef = child(
+      dbRef,
+      `userStarredMessages/${userData.userId}`,
+    );
+    refs.push(starredMessagesRef);
+    onValue(starredMessagesRef, querySnapshot => {
+      const starredMessages = querySnapshot.val() ?? {};
+      dispatch(setStarredMessages({starredMessages}));
     });
     return () => {
       console.log('Unsubscribing to firebase listner');

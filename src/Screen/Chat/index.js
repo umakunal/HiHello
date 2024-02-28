@@ -114,7 +114,16 @@ const Chat = props => {
                   const isOwnMessage = message?.sentBy === userData?.userId;
                   console.log('isOwnMessage', isOwnMessage);
                   const messageType = isOwnMessage ? 'own' : 'other';
-                  return <Bubble type={messageType} message={message?.text} />;
+                  return (
+                    <Bubble
+                      type={messageType}
+                      message={message?.text}
+                      messageId={message?.key}
+                      userId={userData?.userId}
+                      chatId={chatId}
+                      date={message?.sendAt}
+                    />
+                  );
                 }}
               />
             )}
