@@ -25,12 +25,14 @@ import {useNavigation} from '@react-navigation/native';
 import Bubble from '../../Components/Bubble';
 import PageContainer from '../../Components/PageContainer';
 import {createChat, sendTextMessage} from '../../Utils/Actions/ChatAction';
+import ReplyTo from '../../Components/ReplyTo';
 
 // create a component
 const Chat = props => {
   const navigation = useNavigation();
   const [chatUsers, setChatUsers] = useState([]);
   const [messageText, setMessageText] = useState('');
+  const [replyingTo, setReplyingTo] = useState();
   const [chatId, setChatId] = useState(props?.route.params?.chatId);
   const [errorBannerText, setErrorBannerText] = useState('');
   const storedUsers = useSelector(state => state.users.storedUsers);
@@ -79,8 +81,14 @@ const Chat = props => {
         setChatId(id);
       }
       //Send message
-      await sendTextMessage(id, userData.userId, messageText);
+      await sendTextMessage(
+        id,
+        userData.userId,
+        messageText,
+        replyingTo && replyingTo?.key,
+      );
       setMessageText('');
+      setReplyingTo(null);
     } catch (error) {
       console.log('error ocurred while sending message', error);
       setErrorBannerText('Message failed to send.');
@@ -108,11 +116,14 @@ const Chat = props => {
             )}
             {chatId && (
               <FlatList
+                contentContainerStyle={{
+                  paddingBottom: verticalScale(100),
+                  paddingTop: verticalScale(10),
+                }}
                 data={ChatMessages}
                 renderItem={itemData => {
                   const message = itemData?.item;
                   const isOwnMessage = message?.sentBy === userData?.userId;
-                  console.log('isOwnMessage', isOwnMessage);
                   const messageType = isOwnMessage ? 'own' : 'other';
                   return (
                     <Bubble
@@ -122,12 +133,25 @@ const Chat = props => {
                       userId={userData?.userId}
                       chatId={chatId}
                       date={message?.sendAt}
+                      setReply={() => setReplyingTo(message)}
+                      replyingTo={
+                        message?.replyTo &&
+                        ChatMessages.find(m => m.key === message?.replyTo)
+                      }
                     />
                   );
                 }}
               />
             )}
           </PageContainer>
+
+          {replyingTo && (
+            <ReplyTo
+              text={replyingTo?.text}
+              user={storedUsers[replyingTo?.sentBy]}
+              onCancel={() => setReplyingTo(null)}
+            />
+          )}
         </ImageBackground>
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => {}}>

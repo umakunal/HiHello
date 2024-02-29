@@ -32,17 +32,28 @@ const MenuItem = props => {
   );
 };
 const Bubble = props => {
-  const {message, type, messageId, userId, chatId, date} = props;
+  const {
+    message,
+    type,
+    messageId,
+    userId,
+    chatId,
+    date,
+    setReply,
+    replyingTo,
+    name,
+  } = props;
   const starredMessages = useSelector(
     state => state.messages.starredMessages[chatId] ?? {},
   );
-  console.log('starredMessages==>', starredMessages);
+  const storedUsers = useSelector(state => state.users.storedUsers);
+  console.log('replyingTo==>', replyingTo);
   const bubbleStyles = {...styles.container};
   const textStyles = {...styles.textStyle};
   const wrapperStyle = {...styles.wrapperStyle};
   let Container = View;
   let isUserMessage = false;
-  const dateString = moment(date).format('LT');
+  const dateString = date && moment(date).format('LT');
   const menuRef = useRef(null);
   const id = useRef(uuid.v4());
 
@@ -75,6 +86,10 @@ const Bubble = props => {
       isUserMessage = true;
       break;
 
+    case 'reply':
+      bubbleStyles.backgroundColor = '#F2F2F2';
+      break;
+
     default:
       break;
   }
@@ -84,6 +99,8 @@ const Bubble = props => {
   };
 
   const isStarred = isUserMessage && starredMessages[messageId] !== undefined;
+  const replyingToUser = replyingTo && storedUsers[replyingTo.sentBy];
+  console.log('replyingToUser==>', replyingToUser);
   return (
     <View style={wrapperStyle}>
       <Container
@@ -92,6 +109,14 @@ const Bubble = props => {
           menuRef.current.props.ctx.menuActions.openMenu(id.current);
         }}>
         <View style={bubbleStyles}>
+          {name && <Text style={styles.nameStyle}>{name}</Text>}
+          {replyingToUser && (
+            <Bubble
+              type="reply"
+              message={replyingTo?.text}
+              name={replyingToUser?.firstName + ' ' + replyingToUser?.lastName}
+            />
+          )}
           <Text style={textStyles}>{message}</Text>
           {
             <View style={styles.timeContainer}>
@@ -116,6 +141,11 @@ const Bubble = props => {
                 onSelect={() => starMessage(messageId, chatId, userId)}
               />
               <MenuItem
+                text="Reply"
+                onSelect={setReply}
+                icon="arrow-left-circle"
+              />
+              {/* <MenuItem
                 text="Delete"
                 onSelect={() => console.log('Delete')}
                 icon="trash"
@@ -124,7 +154,7 @@ const Bubble = props => {
                 text="Edit"
                 onSelect={() => console.log('Edit')}
                 icon="edit"
-              />
+              /> */}
             </MenuOptions>
           </Menu>
         </View>
@@ -174,6 +204,11 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(10),
     marginLeft: moderateScale(5),
     color: COLORS.grey,
+  },
+  nameStyle: {
+    fontFamily: Fonts.medium,
+    marginBottom: verticalScale(5),
+    color: COLORS.textColor,
   },
 });
 
